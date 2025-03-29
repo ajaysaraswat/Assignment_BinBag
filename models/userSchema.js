@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-//const { createTokenforUser } = require("../service/authentication");
+const { createTokenforUser } = require("../service/auth.js");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -35,7 +35,6 @@ const UserSchema = new mongoose.Schema(
 
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-
   const saltRounds = 10;
   this.password = await bcrypt.hash(this.password, saltRounds);
   next();

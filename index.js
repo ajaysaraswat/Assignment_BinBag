@@ -9,6 +9,9 @@ const PORT = process.env.PORT || 8000;
 const url = process.env.MONGO_URL;
 connectTOMongoDB(url);
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use("/", userRouter);
 
 app.listen(PORT, () => {
