@@ -1,5 +1,7 @@
 # Assignment BinBag API
 
+### Postman Collection Url - https://www.postman.com/docking-module-geoscientist-45208416/ajay/documentation/lxwlsk6/binbag-assignment-postman-collection
+
 ## Overview
 Assignment BinBag is a user authentication and profile management API. It allows users to:
 - Register an account
