@@ -1,6 +1,7 @@
 const express = require("express");
 require("dotenv").config();
 const mongoose = require("mongoose");
+const cookiePaser = require("cookie-parser");
 const userRouter = require("./routes/userRoute");
 const { connectTOMongoDB } = require("./connection");
 
@@ -11,6 +12,7 @@ connectTOMongoDB(url);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookiePaser());
 
 app.use("/", userRouter);
 
