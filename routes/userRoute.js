@@ -1,4 +1,5 @@
 const express = require("express");
+const upload = require("../fileUpload/multer.js");
 const {
   handleUserRegister,
   handleUserLogin,
@@ -10,7 +11,7 @@ const { authenticateUser } = require("../middlewares/authMiddleware.js");
 
 const router = express.Router();
 
-router.post("/register", handleUserRegister);
+router.post("/register", upload.single("profileImageURL"), handleUserRegister);
 router.post("/login", handleUserLogin);
 router.post("/logout", handleLogout);
 

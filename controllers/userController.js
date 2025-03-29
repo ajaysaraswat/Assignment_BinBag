@@ -1,9 +1,9 @@
 const User = require("../models/userSchema");
+const upload = require("../fileUpload/multer");
 
 // Handle user registration
 const handleUserRegister = async (req, res) => {
   try {
-    console.log("body", req.body);
     const { name, email, password, address, bio, profileImageURL } = req.body;
 
     // Check if user already exists
@@ -16,10 +16,9 @@ const handleUserRegister = async (req, res) => {
       name,
       email,
       password,
-
       address,
       bio,
-      profileImageURL: profileImageURL || "/images/avatar.jpeg", // Default profile image
+      profileImageURL: `/uploads/${req.file.filename}`, // Default profile image
     });
 
     await newUser.save();
