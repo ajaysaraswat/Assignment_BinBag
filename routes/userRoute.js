@@ -16,6 +16,6 @@ router.post("/logout", handleLogout);
 
 // Protected routes (Require JWT authentication)
 router.get("/profile", authenticateUser, handleProfileRetrieval);
-router.put("/profile", authenticateUser, handleProfileUpdate);
+router.put("/update", authenticateUser, handleProfileUpdate);
 
 module.exports = router;
