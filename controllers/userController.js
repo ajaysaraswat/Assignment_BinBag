@@ -4,13 +4,16 @@ const upload = require("../fileUpload/multer");
 // Handle user registration
 const handleUserRegister = async (req, res) => {
   try {
-    const { name, email, password, address, bio, profileImageURL } = req.body;
+    const { name, email, password, address, bio } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ error: "Email already registered" });
     }
+    const profileImageURL = req.file
+      ? `/uploads/${req.file.filename}`
+      : "/images/avatar.jpeg";
 
     const newUser = new User({
       name,
@@ -18,7 +21,7 @@ const handleUserRegister = async (req, res) => {
       password,
       address,
       bio,
-      profileImageURL: `/uploads/${req.file.filename}`, // Default profile image
+      profileImageURL,
     });
 
     await newUser.save();
