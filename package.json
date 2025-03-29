@@ -1,0 +1,19 @@
+{
+  "name": "assignment_binbag",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajaysaraswat/Assignment_BinBag.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ajaysaraswat/Assignment_BinBag/issues"
+  },
+  "homepage": "https://github.com/ajaysaraswat/Assignment_BinBag#readme",
+  "description": ""
+}
