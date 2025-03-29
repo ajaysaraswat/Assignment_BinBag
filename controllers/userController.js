@@ -1,5 +1,5 @@
 const User = require("../models/userSchema");
-const { validateToken } = require("../service/auth.js");
+
 // Handle user registration
 const handleUserRegister = async (req, res) => {
   try {
@@ -57,31 +57,32 @@ const handleLogout = (req, res) => {
 
 const handleProfileRetrieval = async (req, res) => {
   try {
-    // Get token from request headers (not cookies)
-    console.log("token ", req.headers);
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ error: "Unauthorized access" });
-    }
-
-    const token = authHeader.split(" ")[1]; // Extract token
-    const decoded = validateToken(token);
-
-    // Check if the token is valid
-    if (!decoded || decoded.error) {
-      return res.status(401).json({ error: "Unauthorized access" });
-    }
-
-    // Find user by ID from decoded token
-    const user = await User.findById(decoded._id).select("-password"); // Exclude password from response
-
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    return res.status(200).json(user);
+    return res.status(200).json(req.user);
   } catch (error) {
     console.error("Profile retrieval error:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const handleProfileUpdate = async (req, res) => {
+  try {
+    // Extract user from middleware
+    const user = req.user;
+
+    // Update only allowed fields
+    const { name, address, bio, profileImageURL } = req.body;
+    if (name) user.name = name;
+    if (address) user.address = address;
+    if (bio) user.bio = bio;
+    if (profileImageURL) user.profileImageURL = profileImageURL;
+
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: "Profile updated successfully", user });
+  } catch (error) {
+    console.error("Profile update error:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -91,4 +92,5 @@ module.exports = {
   handleUserLogin,
   handleLogout,
   handleProfileRetrieval,
+  handleProfileUpdate,
 };

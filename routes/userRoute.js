@@ -2,18 +2,20 @@ const express = require("express");
 const {
   handleUserRegister,
   handleUserLogin,
-  handleProfileRetrieval,
   handleLogout,
+  handleProfileRetrieval,
+  handleProfileUpdate,
 } = require("../controllers/userController");
-const router = express.Router();
+const { authenticateUser } = require("../middlewares/authMiddleware.js");
 
-router.get("/", (req, res) => {
-  res.send("User route is working");
-});
+const router = express.Router();
 
 router.post("/register", handleUserRegister);
 router.post("/login", handleUserLogin);
-router.get("/profile", handleProfileRetrieval);
 router.post("/logout", handleLogout);
+
+// Protected routes (Require JWT authentication)
+router.get("/profile", authenticateUser, handleProfileRetrieval);
+router.put("/profile", authenticateUser, handleProfileUpdate);
 
 module.exports = router;
