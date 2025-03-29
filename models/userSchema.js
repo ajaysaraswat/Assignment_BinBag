@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+//const { createTokenforUser } = require("../service/authentication");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -10,10 +12,6 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-    },
-
-    salt: {
-      type: String,
     },
     password: {
       type: String,
@@ -35,5 +33,28 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+UserSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  const saltRounds = 10;
+  this.password = await bcrypt.hash(this.password, saltRounds);
+  next();
+});
+
+UserSchema.static(
+  "matchPasswordandGenerateToken",
+  async function (email, password) {
+    const user = await this.findOne({ email });
+    if (!user) throw new Error("User not found");
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) throw new Error("Invalid credentials");
+
+    const token = createTokenforUser(user);
+    return token;
+  }
+);
+
 const User = mongoose.model("user", UserSchema);
+
 module.exports = User;
